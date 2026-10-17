@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Domiciliario{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">👷 Panel del Domiciliario</h2>
+<div class="alert alert-info">
+    Cuota diaria: <strong>$25.000</strong> | Balance: <strong>${{ user.balance }}</strong>
+</div>
+<div class="row">
+    <div class="col-lg-8">
+        <div id="map" class="map"></div>
+    </div>
+    <div class="col-lg-4">
+        <button id="onlineBtn" class="btn btn-success btn-lg w-100 mb-3">🟢 Ir en Línea</button>
+        <div id="status" class="alert alert-secondary">Fuera de línea</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const map = L.map('map').setView([4.6097, -74.0817], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+    let marker = null;
+    let online = false;
+
+    setInterval(() => {
+        if (online && marker) {
+            const lat = 4.6097 + (Math.random() - 0.5) * 0.015;
+            const lng = -74.0817 + (Math.random() - 0.5) * 0.015;
+            marker.setLatLng([lat, lng]);
+        }
+    }, 2500);
+
+    document.getElementById('onlineBtn').addEventListener('click', () => {
+        online = !online;
+        const btn = document.getElementById('onlineBtn');
+        const status = document.getElementById('status');
+        if (online) {
+            btn.textContent = '🔴 Fuera de Línea';
+            btn.className = 'btn btn-danger btn-lg w-100 mb-3';
+            status.className = 'alert alert-success';
+            status.textContent = '✅ En línea - Recibiendo pedidos';
+            if (!marker) marker = L.marker([4.61, -74.08]).addTo(map).bindPopup('Tu posición').openPopup();
+        } else {
+            btn.textContent = '🟢 Ir en Línea';
+            btn.className = 'btn btn-success btn-lg w-100 mb-3';
+            status.className = 'alert alert-secondary';
+            status.textContent = 'Fuera de línea';
+        }
+    });
+</script>
+{% endblock %}

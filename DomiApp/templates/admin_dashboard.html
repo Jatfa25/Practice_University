@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">👑 Panel de Administrador</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">Usuarios de Prueba</div>
+            <div class="card-body">
+                <p>Cliente: cliente@demo.com</p>
+                <p>Domiciliario: domi@demo.com</p>
+                <p>Admin: admin@demo.com</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">Resumen</div>
+            <div class="card-body">
+                <p>Cuota diaria domiciliarios: $25.000</p>
+                <p>Estado: Sistema operativo</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

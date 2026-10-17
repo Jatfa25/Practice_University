@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Cliente{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">🚚 Panel del Cliente</h2>
+<div class="row">
+    <div class="col-lg-7">
+        <div id="map" class="map"></div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-body">
+                <h5>Solicitar Domicilio</h5>
+                <form id="orderForm">
+                    <div class="mb-3">
+                        <label>Dirección de Recogida</label>
+                        <input type="text" id="pickup" class="form-control" placeholder="Ej: Calle 100 #20-30" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Dirección de Entrega</label>
+                        <input type="text" id="delivery" class="form-control" placeholder="Ej: Carrera 15 #45-67" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Buscar Domiciliarios</button>
+                </form>
+                <div id="result" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const map = L.map('map').setView([4.6097, -74.0817], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    document.getElementById('orderForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = {
+            pickup: document.getElementById('pickup').value,
+            delivery: document.getElementById('delivery').value
+        };
+        const res = await fetch('/api/request_order', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        document.getElementById('result').innerHTML = `
+            <div class="alert alert-success">
+                ✅ Pedido #${json.order_id} creado<br>
+                Precio estimado: <strong>$${json.price}</strong><br>
+                Buscando domiciliario cercano...
+            </div>`;
+    });
+</script>
+{% endblock %}
